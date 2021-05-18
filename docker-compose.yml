@@ -1,0 +1,23 @@
+version: '3.1'
+
+services:
+  calcio-app:
+    build: .
+    container_name: calcio-app
+    ports:
+      - 8081:8080
+    depends_on:
+      - calcio-db
+    links:
+      - calcio-db
+
+  calcio-db:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_DATABASE: calcio-db
+    ports:
+      - 3316:3306
