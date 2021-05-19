@@ -1,11 +1,13 @@
 package com.elis.footballmanager.helper;
 
+import com.elis.footballmanager.dto.match.GameDTO;
+import com.elis.footballmanager.dto.match.GameListDTO;
 import com.elis.footballmanager.dto.player.PlayerCreationRequestDTO;
 import com.elis.footballmanager.dto.player.PlayerCreationResponseDTO;
 import com.elis.footballmanager.dto.player.PlayerDTO;
 import com.elis.footballmanager.dto.player.PlayerListDTO;
-import com.elis.footballmanager.dto.tenant.TenantCreationRequestDTO;
-import com.elis.footballmanager.dto.tenant.TenantDTO;
+import com.elis.footballmanager.dto.playerGame.PlayerGamesDTO;
+import com.elis.footballmanager.dto.playerGame.PlayerGamesListDTO;
 import com.elis.footballmanager.model.Game;
 import com.elis.footballmanager.model.Player;
 import com.elis.footballmanager.model.Tenant;
@@ -102,7 +104,7 @@ public class PlayerHelper {
     }
 
     public PlayerDTO signToMatch(Tenant tenant, Player player, Game game) {
-        player.setGame(game);
+        player.getGames().add(game);
 
         playerRepository.save(player);
 
@@ -123,5 +125,13 @@ public class PlayerHelper {
 
     public Player findById(Long playerId) {
         return playerRepository.findById(playerId).orElseThrow(() -> new RuntimeException("Player not found"));
+    }
+
+    public GameListDTO getPlayerMatches(Player player) {
+        GameListDTO gameListDTO = new GameListDTO();
+
+        gameListDTO.matches = player.getGames().stream().map(GameDTO::of).collect(Collectors.toList());
+
+        return gameListDTO;
     }
 }

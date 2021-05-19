@@ -101,8 +101,8 @@ public class GameHelper {
     }
 
     public GameCreationResponseDTO removePlayer(Tenant tenant, Game game, Player player) {
-        /*int i = 0;
-        for(Player playerLoop : game.getPlayers()){
+        int i = 0;
+        /*for(Player playerLoop : game.getPlayers()){
 
             System.out.println(playerLoop.getEmail());
             System.out.println(player.getEmail());
@@ -114,7 +114,12 @@ public class GameHelper {
             }
         }
         game.getPlayers().remove(i);*/
-        player.setGame(null);
+        //player.setGame(null);
+        for(Game gameLoop : player.getGames()){
+            if(gameLoop.getId().equals(game.getId())){
+                player.getGames().remove(i);
+            }
+        }
 
         //gameRepository.save(game);
         playerRepository.save(player);

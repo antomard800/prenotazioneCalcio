@@ -1,9 +1,11 @@
 package com.elis.footballmanager.controller;
 
+import com.elis.footballmanager.dto.match.GameListDTO;
 import com.elis.footballmanager.dto.player.PlayerCreationRequestDTO;
 import com.elis.footballmanager.dto.player.PlayerCreationResponseDTO;
 import com.elis.footballmanager.dto.player.PlayerDTO;
 import com.elis.footballmanager.dto.player.PlayerListDTO;
+import com.elis.footballmanager.dto.playerGame.PlayerGamesListDTO;
 import com.elis.footballmanager.service.interfaces.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -54,5 +56,10 @@ public class PlayerController {
     @PatchMapping("/{tenantId}/{gameId}/updatePlayerRating/{playerId}")
     public PlayerCreationResponseDTO updateTenantPlayerRating(@PathVariable("tenantId") Long tenantId, @PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId, @RequestBody PlayerCreationRequestDTO playerCreationRequestDTO){
         return playerService.updateTenantPlayerRating(tenantId, gameId, playerId, playerCreationRequestDTO);
+    }
+
+    @GetMapping("/{tenantId}/{playerId}/getMatches")
+    public GameListDTO getPlayerMatches(@PathVariable("tenantId") Long tenantId, @PathVariable("playerId") Long playerId){
+        return playerService.getPlayerMatches(tenantId, playerId);
     }
 }

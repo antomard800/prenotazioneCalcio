@@ -26,7 +26,7 @@ public class Game {
     private String date;
     private String time;
 
-    @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "games", fetch = FetchType.LAZY)
     List<Player> players = new ArrayList<>();
 
     @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)

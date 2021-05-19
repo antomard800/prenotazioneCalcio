@@ -1,12 +1,10 @@
 package com.elis.footballmanager.service.interfaces;
 
+import com.elis.footballmanager.dto.match.GameListDTO;
 import com.elis.footballmanager.dto.player.PlayerCreationRequestDTO;
 import com.elis.footballmanager.dto.player.PlayerCreationResponseDTO;
 import com.elis.footballmanager.dto.player.PlayerDTO;
 import com.elis.footballmanager.dto.player.PlayerListDTO;
-import com.elis.footballmanager.dto.tenant.TenantCreationRequestDTO;
-import com.elis.footballmanager.dto.tenant.TenantCreationResponseDTO;
-import com.elis.footballmanager.dto.tenant.TenantDTO;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,4 +24,6 @@ public interface PlayerService {
     PlayerDTO signToMatch(Long tenantId, Long playerId, Long gameId);
 
     PlayerCreationResponseDTO updateTenantPlayerRating(Long tenantId, Long gameId, Long playerId, PlayerCreationRequestDTO playerCreationRequestDTO);
+
+    GameListDTO getPlayerMatches(Long tenantId, Long playerId);
 }

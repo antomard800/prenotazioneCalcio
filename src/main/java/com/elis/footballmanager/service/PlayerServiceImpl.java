@@ -1,5 +1,6 @@
 package com.elis.footballmanager.service;
 
+import com.elis.footballmanager.dto.match.GameListDTO;
 import com.elis.footballmanager.dto.player.PlayerCreationRequestDTO;
 import com.elis.footballmanager.dto.player.PlayerCreationResponseDTO;
 import com.elis.footballmanager.dto.player.PlayerDTO;
@@ -117,5 +118,16 @@ public class PlayerServiceImpl implements PlayerService {
         Preconditions.checkArgument(!Objects.isNull(player), "Player does not exist");
 
         return playerHelper.updateTenantPlayerRating(tenant, game, player, playerCreationRequestDTO);
+    }
+
+    @Override
+    public GameListDTO getPlayerMatches(Long tenantId, Long playerId) {
+        Tenant tenant = tenantHelper.findById(tenantId);
+        Player player = playerHelper.findByTenant_IdAndId(tenantId, playerId);
+
+        Preconditions.checkArgument(!Objects.isNull(tenant), "Tenant does not exist");
+        Preconditions.checkArgument(!Objects.isNull(player), "Player does not exist");
+
+        return playerHelper.getPlayerMatches(player);
     }
 }

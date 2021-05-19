@@ -21,9 +21,9 @@ public class Player extends User{
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @ManyToOne
-    @JoinColumn(name = "game_id")
-    private Game game;
+    @ManyToMany
+    @JoinTable(name = "game_player", joinColumns = { @JoinColumn(name = "game_id") }, inverseJoinColumns = { @JoinColumn(name = "user_id") })
+    private List<Game> games = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Judgement> judgements = new ArrayList<>();
