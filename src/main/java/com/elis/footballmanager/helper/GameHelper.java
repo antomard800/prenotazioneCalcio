@@ -10,6 +10,7 @@ import com.elis.footballmanager.model.Game;
 import com.elis.footballmanager.model.Player;
 import com.elis.footballmanager.model.Tenant;
 import com.elis.footballmanager.repository.GameRepository;
+import com.elis.footballmanager.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,9 @@ import java.util.stream.Collectors;
 public class GameHelper {
     @Autowired
     GameRepository gameRepository;
+
+    @Autowired
+    PlayerRepository playerRepository;
 
     public GameListDTO getTenantMatches(Long tenantId) {
         GameListDTO gameListDTO = new GameListDTO();
@@ -97,13 +101,23 @@ public class GameHelper {
     }
 
     public GameCreationResponseDTO removePlayer(Tenant tenant, Game game, Player player) {
+        /*int i = 0;
         for(Player playerLoop : game.getPlayers()){
+
+            System.out.println(playerLoop.getEmail());
+            System.out.println(player.getEmail());
             if(playerLoop.getEmail().equalsIgnoreCase(player.getEmail())){
-                game.getPlayers().remove(player);
+                System.out.println("IF");
+                //System.out.println(game.getPlayers());
+            } else {
+                i++;
             }
         }
+        game.getPlayers().remove(i);*/
+        player.setGame(null);
 
-        gameRepository.save(game);
+        //gameRepository.save(game);
+        playerRepository.save(player);
 
         return null;
     }

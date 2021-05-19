@@ -90,7 +90,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public GameCreationResponseDTO removePlayer(Long tenantId, Long gameId, Long playerId, GameCreationRequestDTO gameCreationRequestDTO) {
+    public GameCreationResponseDTO removePlayer(Long tenantId, Long gameId, Long playerId/*, GameCreationRequestDTO gameCreationRequestDTO*/) {
         Tenant tenant = tenantHelper.findById(tenantId);
         Game game = gameHelper.findByTenant_IdAndId(tenantId, gameId);
         Player player = playerHelper.findByTenant_IdAndId(tenantId, playerId);
