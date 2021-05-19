@@ -25,23 +25,28 @@ public class GameController {
         return gameService.createTenantMatch(tenantId, gameCreationRequestDTO);
     }
 
-    @GetMapping("/{tenantId}/getMatch/{matchId}")
-    public GameDTO getTenantMatch(@PathVariable("tenantId") Long tenantId, @PathVariable("matchId") Long matchId){
-        return gameService.getTenantMatch(tenantId, matchId);
+    @GetMapping("/{tenantId}/getMatch/{gameId}")
+    public GameDTO getTenantMatch(@PathVariable("tenantId") Long tenantId, @PathVariable("gameId") Long gameId){
+        return gameService.getTenantMatch(tenantId, gameId);
     }
 
-    @PatchMapping("/{tenantId}/updateMatch/{matchId}")
-    public GameCreationResponseDTO updateTenantMatch(@PathVariable("tenantId") Long tenantId, @PathVariable("matchId") Long matchId, @RequestBody GameCreationRequestDTO gameCreationRequestDTO){
-        return gameService.updateTenantMatch(tenantId, matchId, gameCreationRequestDTO);
+    @PatchMapping("/{tenantId}/updateMatch/{gameId}")
+    public GameCreationResponseDTO updateTenantMatch(@PathVariable("tenantId") Long tenantId, @PathVariable("gameId") Long gameId, @RequestBody GameCreationRequestDTO gameCreationRequestDTO){
+        return gameService.updateTenantMatch(tenantId, gameId, gameCreationRequestDTO);
     }
 
-    @DeleteMapping("/{tenantId}/deleteMatch/{matchId}")
-    public GameDTO deleteTenantMatch(@PathVariable("tenantId") Long tenantId, @PathVariable("matchId") Long matchId){
-        return gameService.deleteTenantMatch(tenantId, matchId);
+    @DeleteMapping("/{tenantId}/deleteMatch/{gameId}")
+    public GameDTO deleteTenantMatch(@PathVariable("tenantId") Long tenantId, @PathVariable("gameId") Long gameId){
+        return gameService.deleteTenantMatch(tenantId, gameId);
     }
 
-    @GetMapping("/{tenantId}/getMatchPlayers/{matchId}")
-    public PlayerListDTO getMatchPlayers(@PathVariable("tenantId") Long tenantId, @PathVariable("matchId") Long matchId){
-        return gameService.getMatchPlayers(tenantId, matchId);
+    @GetMapping("/{tenantId}/getMatchPlayers/{gameId}")
+    public PlayerListDTO getMatchPlayers(@PathVariable("tenantId") Long tenantId, @PathVariable("gameId") Long gameId){
+        return gameService.getMatchPlayers(tenantId, gameId);
+    }
+    
+    @PatchMapping("/{tenantId}/{gameId}/removePlayer/{playerId}")
+    public GameCreationResponseDTO removePlayer(@PathVariable("tenantId") Long tenantId, @PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId, @RequestBody GameCreationRequestDTO gameCreationRequestDTO){
+        return gameService.removePlayer(tenantId, gameId, playerId, gameCreationRequestDTO);
     }
 }

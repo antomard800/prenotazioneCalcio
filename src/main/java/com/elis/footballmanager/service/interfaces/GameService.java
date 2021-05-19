@@ -13,11 +13,13 @@ public interface GameService {
 
     GameCreationResponseDTO createTenantMatch(Long tenantId, GameCreationRequestDTO gameCreationRequestDTO);
 
-    GameDTO getTenantMatch(Long tenantId, Long matchId);
+    GameDTO getTenantMatch(Long tenantId, Long gameId);
 
-    GameCreationResponseDTO updateTenantMatch(Long tenantId, Long matchId, GameCreationRequestDTO gameCreationRequestDTO);
+    GameCreationResponseDTO updateTenantMatch(Long tenantId, Long gameId, GameCreationRequestDTO gameCreationRequestDTO);
 
-    GameDTO deleteTenantMatch(Long tenantId, Long matchId);
+    GameDTO deleteTenantMatch(Long tenantId, Long gameId);
 
-    PlayerListDTO getMatchPlayers(Long tenantId, Long matchId);
+    PlayerListDTO getMatchPlayers(Long tenantId, Long gameId);
+
+    GameCreationResponseDTO removePlayer(Long tenantId, Long gameId, Long playerId, GameCreationRequestDTO gameCreationRequestDTO);
 }

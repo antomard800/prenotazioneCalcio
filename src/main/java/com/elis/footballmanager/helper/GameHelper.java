@@ -7,6 +7,7 @@ import com.elis.footballmanager.dto.match.GameListDTO;
 import com.elis.footballmanager.dto.player.PlayerDTO;
 import com.elis.footballmanager.dto.player.PlayerListDTO;
 import com.elis.footballmanager.model.Game;
+import com.elis.footballmanager.model.Player;
 import com.elis.footballmanager.model.Tenant;
 import com.elis.footballmanager.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,5 +94,17 @@ public class GameHelper {
         PlayerListDTO playerListDTO = new PlayerListDTO();
         playerListDTO.players = game.getPlayers().stream().map(PlayerDTO::of).collect(Collectors.toList());
         return playerListDTO;
+    }
+
+    public GameCreationResponseDTO removePlayer(Tenant tenant, Game game, Player player) {
+        for(Player playerLoop : game.getPlayers()){
+            if(playerLoop.getEmail().equalsIgnoreCase(player.getEmail())){
+                game.getPlayers().remove(player);
+            }
+        }
+
+        gameRepository.save(game);
+
+        return null;
     }
 }
