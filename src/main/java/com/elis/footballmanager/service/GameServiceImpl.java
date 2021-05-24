@@ -101,4 +101,15 @@ public class GameServiceImpl implements GameService {
 
         return gameHelper.removePlayer(tenant, game, player);
     }
+
+    @Override
+    public GameCreationResponseDTO buildTeams(Long tenantId, Long gameId) {
+        Tenant tenant = tenantHelper.findById(tenantId);
+        Game game = gameHelper.findByTenant_IdAndId(tenantId, gameId);
+
+        Preconditions.checkArgument(!Objects.isNull(tenant), "Tenant does not exist");
+        Preconditions.checkArgument(!Objects.isNull(game), "Game does not exist");
+
+        return gameHelper.buildTeams(tenant, game);
+    }
 }

@@ -36,4 +36,13 @@ public class Team {
 
     @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
     private List<Player> players = new ArrayList<>();
+
+    public Integer getPlayersTotalRating() {
+        Integer totalRating = 0;
+        for(Player player : players){
+            totalRating += player.getRating();
+        }
+
+        return totalRating;
+    }
 }

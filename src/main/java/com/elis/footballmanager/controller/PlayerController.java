@@ -5,7 +5,6 @@ import com.elis.footballmanager.dto.player.PlayerCreationRequestDTO;
 import com.elis.footballmanager.dto.player.PlayerCreationResponseDTO;
 import com.elis.footballmanager.dto.player.PlayerDTO;
 import com.elis.footballmanager.dto.player.PlayerListDTO;
-import com.elis.footballmanager.dto.playerGame.PlayerGamesListDTO;
 import com.elis.footballmanager.service.interfaces.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

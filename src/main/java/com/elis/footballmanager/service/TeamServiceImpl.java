@@ -1,11 +1,15 @@
 package com.elis.footballmanager.service;
 
+import com.elis.footballmanager.dto.player.PlayerListDTO;
 import com.elis.footballmanager.dto.team.TeamCreationRequestDTO;
 import com.elis.footballmanager.dto.team.TeamCreationResponseDTO;
 import com.elis.footballmanager.dto.team.TeamDTO;
 import com.elis.footballmanager.dto.team.TeamListDTO;
+import com.elis.footballmanager.helper.GameHelper;
 import com.elis.footballmanager.helper.TeamHelper;
 import com.elis.footballmanager.helper.TenantHelper;
+import com.elis.footballmanager.model.Game;
+import com.elis.footballmanager.model.Team;
 import com.elis.footballmanager.model.Tenant;
 import com.elis.footballmanager.service.interfaces.TeamService;
 
@@ -22,6 +26,9 @@ public class TeamServiceImpl implements TeamService {
 
     @Autowired
     TenantHelper tenantHelper;
+
+    @Autowired
+    GameHelper gameHelper;
 
     @Override
     public TeamListDTO getTenantTeams(Long tenantId) {
@@ -73,5 +80,18 @@ public class TeamServiceImpl implements TeamService {
         Preconditions.checkArgument(teamId != null, "Team id cannot be null");
 
         return teamHelper.deleteTenantTeam(tenantId, teamId);
+    }
+
+    @Override
+    public PlayerListDTO getTeamPlayers(Long tenantId, Long gameId, Long teamId) {
+        Tenant tenant = tenantHelper.findById(tenantId);
+        Game game = gameHelper.findByTenant_IdAndId(tenantId, gameId);
+        Team team = teamHelper.findByTenant_IdAndId(tenantId, teamId);
+
+        Preconditions.checkArgument(!Objects.isNull(tenant), "Tenant does not exist");
+        Preconditions.checkArgument(!Objects.isNull(game), "Game does not exist");
+        Preconditions.checkArgument(!Objects.isNull(team), "Team does not exist");
+
+        return teamHelper.getTeamPlayers(team);
     }
 }

@@ -48,6 +48,18 @@ public class Game {
         return counter;
     }
 
+    public List<Player> getKeepers(){
+        List<Player> keepers = new ArrayList<>();
+
+        for(Player player : players){
+            if(player.getRole().equalsIgnoreCase("portiere")){
+                keepers.add(player);
+            }
+        }
+
+        return keepers;
+    }
+
     public Integer numberOfBacks(){
         Integer counter = 0;
 
@@ -58,6 +70,17 @@ public class Game {
         }
 
         return counter;
+    }
+
+    public List<Player> getBacks(){
+        List<Player> backs = new ArrayList<>();
+
+        for(Player player : players){
+            if(player.getRole().equalsIgnoreCase("difensore")){
+                backs.add(player);
+            }
+        }
+        return backs;
     }
 
     public Integer numberOfMidfielders(){
@@ -72,6 +95,18 @@ public class Game {
         return counter;
     }
 
+    public List<Player> getMidfielders(){
+        List<Player> midfielders = new ArrayList<>();
+
+        for(Player player : players){
+            if(player.getRole().equalsIgnoreCase("centrocampista")){
+                midfielders.add(player);
+            }
+        }
+
+        return midfielders;
+    }
+
     public Integer numberOfStrikers(){
         Integer counter = 0;
 
@@ -82,5 +117,17 @@ public class Game {
         }
 
         return counter;
+    }
+
+    public List<Player> getStrikers(){
+        List<Player> strikers = new ArrayList<>();
+
+        for(Player player : players){
+            if(player.getRole().equalsIgnoreCase("attaccante")){
+                strikers.add(player);
+            }
+        }
+
+        return strikers;
     }
 }

@@ -1,5 +1,7 @@
 package com.elis.footballmanager.helper;
 
+import com.elis.footballmanager.dto.player.PlayerDTO;
+import com.elis.footballmanager.dto.player.PlayerListDTO;
 import com.elis.footballmanager.dto.team.TeamCreationRequestDTO;
 import com.elis.footballmanager.dto.team.TeamCreationResponseDTO;
 import com.elis.footballmanager.dto.team.TeamDTO;
@@ -75,6 +77,18 @@ public class TeamHelper {
         } else {
             throw new RuntimeException("Team id not found");
         }
+    }
+
+    public Team findByTenant_IdAndId(Long tenantId, Long teamId) {
+        return teamRepository.findTeamByTenant_IdAndId(tenantId, teamId).orElseThrow(() -> new RuntimeException("Team not found"));
+    }
+
+    public PlayerListDTO getTeamPlayers(Team team) {
+        PlayerListDTO playerListDTO = new PlayerListDTO();
+
+        playerListDTO.players = team.getPlayers().stream().map(PlayerDTO::of).collect(Collectors.toList());
+
+        return playerListDTO;
     }
     /*public TeamMemberCreationResponseDTO createTeamMember(Long teamId, TeamMemberDTO teamMemberDTO) {
 

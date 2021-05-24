@@ -1,5 +1,6 @@
 package com.elis.footballmanager.service.interfaces;
 
+import com.elis.footballmanager.dto.player.PlayerListDTO;
 import com.elis.footballmanager.dto.team.TeamCreationRequestDTO;
 import com.elis.footballmanager.dto.team.TeamCreationResponseDTO;
 import com.elis.footballmanager.dto.team.TeamDTO;
@@ -17,4 +18,6 @@ public interface TeamService {
     TeamCreationResponseDTO updateTenantTeam(Long tenantId, Long teamId, TeamCreationRequestDTO teamCreationRequestDTO);
 
     TeamDTO deleteTenantTeam(Long tenantId, Long teamId);
+
+    PlayerListDTO getTeamPlayers(Long tenantId, Long gameId, Long teamId);
 }

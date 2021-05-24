@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,8 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     List<Team> findTeamByTenant_Id(Long tenantId);
 
     Optional<Team> findTeamByTenant_IdAndId(Long tenantId, Long teamId);
+
+    List<Team> findTeamsByTenant_Id(Long tenantId);
 
 //    void deleteByTenant_IdAndId(Long tenantId, Long teamId);
 }

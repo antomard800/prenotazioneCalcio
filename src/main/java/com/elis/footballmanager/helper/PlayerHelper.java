@@ -6,8 +6,6 @@ import com.elis.footballmanager.dto.player.PlayerCreationRequestDTO;
 import com.elis.footballmanager.dto.player.PlayerCreationResponseDTO;
 import com.elis.footballmanager.dto.player.PlayerDTO;
 import com.elis.footballmanager.dto.player.PlayerListDTO;
-import com.elis.footballmanager.dto.playerGame.PlayerGamesDTO;
-import com.elis.footballmanager.dto.playerGame.PlayerGamesListDTO;
 import com.elis.footballmanager.model.Game;
 import com.elis.footballmanager.model.Player;
 import com.elis.footballmanager.model.Tenant;
