@@ -9,6 +9,8 @@ import com.elis.footballmanager.service.interfaces.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin(origins = "*")
 public class GameController {
@@ -51,7 +53,7 @@ public class GameController {
     }
 
     @PatchMapping("/{tenantId}/{gameId}/buildTeams")
-    public GameCreationResponseDTO buildTeams(@PathVariable("tenantId") Long tenantId, @PathVariable("gameId") Long gameId){
+    public List<Long> buildTeams(@PathVariable("tenantId") Long tenantId, @PathVariable("gameId") Long gameId){
         return gameService.buildTeams(tenantId, gameId);
     }
 }

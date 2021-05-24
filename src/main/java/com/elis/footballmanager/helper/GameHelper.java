@@ -17,6 +17,7 @@ import com.elis.footballmanager.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -134,7 +135,7 @@ public class GameHelper {
         return null;
     }
 
-    public GameCreationResponseDTO buildTeams(Tenant tenant, Game game) {
+    public List<Long> buildTeams(Tenant tenant, Game game) {
         if(game.getPlayers().size() < 14){
             throw new RuntimeException("Insufficient number of players");
         }
@@ -210,6 +211,11 @@ public class GameHelper {
         teamRepository.save(firstTeam);
         teamRepository.save(secondTeam);
 
-        return null;
+        List<Long> teamIds = new ArrayList<>();
+
+        teamIds.add(firstTeam.getId());
+        teamIds.add(secondTeam.getId());
+
+        return teamIds;
     }
 }

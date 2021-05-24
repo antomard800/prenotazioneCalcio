@@ -7,6 +7,8 @@ import com.elis.footballmanager.dto.match.GameListDTO;
 import com.elis.footballmanager.dto.player.PlayerListDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface GameService {
     GameListDTO getTenantMatches(Long tenantId);
@@ -23,5 +25,5 @@ public interface GameService {
 
     GameCreationResponseDTO removePlayer(Long tenantId, Long gameId, Long playerId/*, GameCreationRequestDTO gameCreationRequestDTO*/);
 
-    GameCreationResponseDTO buildTeams(Long tenantId, Long gameId);
+    List<Long> buildTeams(Long tenantId, Long gameId);
 }
