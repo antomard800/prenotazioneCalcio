@@ -10,7 +10,8 @@ public class PlayerDTO {
     public Integer rating;
     public String role;
     public Long tenant;
-    //public Long game;
+    public String teamName;
+    public String teamColor;
 
     public static PlayerDTO of(Player player) {
         PlayerDTO playerDTO = new PlayerDTO();
@@ -21,7 +22,10 @@ public class PlayerDTO {
         playerDTO.rating = player.getRating();
         playerDTO.role = player.getRole();
         playerDTO.tenant = player.getTenant().getId();
-        //playerDTO.game = player.getGame().getId();
+        if(player.getTeam() != null){
+            playerDTO.teamName = player.getTeam().getName();
+            playerDTO.teamColor = player.getTeam().getColor();
+        }
 
         return playerDTO;
     }
