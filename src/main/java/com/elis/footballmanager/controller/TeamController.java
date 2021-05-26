@@ -1,5 +1,6 @@
 package com.elis.footballmanager.controller;
 
+import com.elis.footballmanager.dto.match.GameCreationResponseDTO;
 import com.elis.footballmanager.dto.player.PlayerListDTO;
 import com.elis.footballmanager.dto.team.TeamCreationRequestDTO;
 import com.elis.footballmanager.dto.team.TeamCreationResponseDTO;
@@ -44,5 +45,10 @@ public class TeamController {
     @GetMapping("/{tenantId}/{gameId}/getTeamPlayers/{teamId}")
     public PlayerListDTO getTeamPlayers(@PathVariable("tenantId") Long tenantId, @PathVariable("gameId") Long gameId, @PathVariable("teamId") Long teamId){
         return teamService.getTeamPlayers(tenantId, gameId, teamId);
+    }
+
+    @PatchMapping("{tenantId}/{gameId}/removePlayers/{teamId}")
+    public TeamCreationResponseDTO removePlayers(@PathVariable("tenantId") Long tenantId, @PathVariable("gameId") Long gameId, @PathVariable("teamId") Long teamId){
+        return teamService.removePlayers(tenantId, gameId, teamId);
     }
 }

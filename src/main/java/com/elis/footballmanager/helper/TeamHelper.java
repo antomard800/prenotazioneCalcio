@@ -9,6 +9,7 @@ import com.elis.footballmanager.dto.team.TeamListDTO;
 import com.elis.footballmanager.model.Player;
 import com.elis.footballmanager.model.Team;
 import com.elis.footballmanager.model.Tenant;
+import com.elis.footballmanager.repository.PlayerRepository;
 import com.elis.footballmanager.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,9 @@ public class TeamHelper {
 
     @Autowired
     TenantHelper tenantHelper;
+
+    @Autowired
+    PlayerRepository playerRepository;
 
     public TeamListDTO getTenantTeams(Long tenantId) {
         TeamListDTO teamListDTO = new TeamListDTO();
@@ -89,6 +93,15 @@ public class TeamHelper {
         playerListDTO.players = team.getPlayers().stream().map(PlayerDTO::of).collect(Collectors.toList());
 
         return playerListDTO;
+    }
+
+    public TeamCreationResponseDTO removePlayers(Team team) {
+        for(Player player : team.getPlayers()){
+            player.setTeam(null);
+            playerRepository.save(player);
+        }
+
+        return null;
     }
     /*public TeamMemberCreationResponseDTO createTeamMember(Long teamId, TeamMemberDTO teamMemberDTO) {
 

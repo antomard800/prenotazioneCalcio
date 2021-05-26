@@ -20,4 +20,6 @@ public interface TeamService {
     TeamDTO deleteTenantTeam(Long tenantId, Long teamId);
 
     PlayerListDTO getTeamPlayers(Long tenantId, Long gameId, Long teamId);
+
+    TeamCreationResponseDTO removePlayers(Long tenantId, Long gameId, Long teamId);
 }
