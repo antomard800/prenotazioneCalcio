@@ -94,22 +94,4 @@ public class TeamHelper {
 
         return playerListDTO;
     }
-
-    public TeamCreationResponseDTO removePlayers(Team team) {
-        for(Player player : team.getPlayers()){
-            player.setTeam(null);
-            playerRepository.save(player);
-        }
-
-        return null;
-    }
-    /*public TeamMemberCreationResponseDTO createTeamMember(Long teamId, TeamMemberDTO teamMemberDTO) {
-
-        Team savedTeam = teamRepository.save(squadra);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedTeam.getId()).toUri();
-        TeamMemberCreationResponseDTO response = new TeamMemberCreationResponseDTO();
-        response.url = location;
-        return response;
-    }*/
 }

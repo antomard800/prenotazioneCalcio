@@ -26,4 +26,6 @@ public interface GameService {
     GameCreationResponseDTO removePlayer(Long tenantId, Long gameId, Long playerId/*, GameCreationRequestDTO gameCreationRequestDTO*/);
 
     List<Long> buildTeams(Long tenantId, Long gameId);
+
+    GameCreationResponseDTO removePlayers(Long tenantId, Long gameId);
 }

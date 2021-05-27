@@ -46,9 +46,4 @@ public class TeamController {
     public PlayerListDTO getTeamPlayers(@PathVariable("tenantId") Long tenantId, @PathVariable("gameId") Long gameId, @PathVariable("teamId") Long teamId){
         return teamService.getTeamPlayers(tenantId, gameId, teamId);
     }
-
-    @PatchMapping("{tenantId}/{gameId}/removePlayers/{teamId}")
-    public TeamCreationResponseDTO removePlayers(@PathVariable("tenantId") Long tenantId, @PathVariable("gameId") Long gameId, @PathVariable("teamId") Long teamId){
-        return teamService.removePlayers(tenantId, gameId, teamId);
-    }
 }

@@ -52,6 +52,11 @@ public class GameController {
         return gameService.removePlayer(tenantId, gameId, playerId/*, gameCreationRequestDTO*/);
     }
 
+    @PatchMapping("{tenantId}/{gameId}/removePlayers")
+    public GameCreationResponseDTO removePlayers(@PathVariable("tenantId") Long tenantId, @PathVariable("gameId") Long gameId){
+        return gameService.removePlayers(tenantId, gameId);
+    }
+
     @PatchMapping("/{tenantId}/{gameId}/buildTeams")
     public List<Long> buildTeams(@PathVariable("tenantId") Long tenantId, @PathVariable("gameId") Long gameId){
         return gameService.buildTeams(tenantId, gameId);

@@ -94,17 +94,4 @@ public class TeamServiceImpl implements TeamService {
 
         return teamHelper.getTeamPlayers(team);
     }
-
-    @Override
-    public TeamCreationResponseDTO removePlayers(Long tenantId, Long gameId, Long teamId) {
-        Tenant tenant = tenantHelper.findById(tenantId);
-        Game game = gameHelper.findByTenant_IdAndId(tenantId, gameId);
-        Team team = teamHelper.findByTenant_IdAndId(tenantId, teamId);
-
-        Preconditions.checkArgument(!Objects.isNull(tenant), "Tenant does not exist");
-        Preconditions.checkArgument(!Objects.isNull(game), "Game does not exist");
-        Preconditions.checkArgument(!Objects.isNull(team), "Team does not exist");
-
-        return teamHelper.removePlayers(team);
-    }
 }

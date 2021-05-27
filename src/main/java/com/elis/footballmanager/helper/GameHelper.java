@@ -41,17 +41,6 @@ public class GameHelper {
     public GameCreationResponseDTO createTenantMatch(Tenant tenant, GameCreationRequestDTO gameCreationRequestDTO){
         Game game = new Game();
 
-        /*Date date = null;
-        try {
-            date = new SimpleDateFormat("dd/MM/yyyy").parse(matchCreationRequestDTO.date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        LocalDate matchDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("H:mm:ss");
-        LocalTime time = LocalTime.from(dtf.parse(matchCreationRequestDTO.time));*/
-
         game.setDate(gameCreationRequestDTO.date);
         game.setTime(gameCreationRequestDTO.time);
         game.setTenant(tenant);
@@ -110,27 +99,26 @@ public class GameHelper {
 
     public GameCreationResponseDTO removePlayer(Tenant tenant, Game game, Player player) {
         int i = 0;
-        /*for(Player playerLoop : game.getPlayers()){
 
-            System.out.println(playerLoop.getEmail());
-            System.out.println(player.getEmail());
-            if(playerLoop.getEmail().equalsIgnoreCase(player.getEmail())){
-                System.out.println("IF");
-                //System.out.println(game.getPlayers());
-            } else {
-                i++;
-            }
-        }
-        game.getPlayers().remove(i);*/
-        //player.setGame(null);
         for(Game gameLoop : player.getGames()){
             if(gameLoop.getId().equals(game.getId())){
                 player.getGames().remove(i);
             }
+
+            i++;
         }
 
-        //gameRepository.save(game);
         playerRepository.save(player);
+
+        return null;
+    }
+
+    public GameCreationResponseDTO removePlayers(Game game) {
+        for(Player playerLoop : game.getPlayers()){
+            playerLoop.setTeam(null);
+
+            playerRepository.save(playerLoop);
+        }
 
         return null;
     }
@@ -142,6 +130,11 @@ public class GameHelper {
 
         if(teamRepository.findTeamsByTenant_Id(tenant.getId()).size() < 2){
             throw new RuntimeException("Insufficient number of teams");
+        }
+
+        for(Team teamLoop : game.getTeams()){
+            teamLoop.setGame(null);
+            teamRepository.save(teamLoop);
         }
 
         Team firstTeam = tenant.getTeams().get((int) (Math.random() * tenant.getTeams().size()));
