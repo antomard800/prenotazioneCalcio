@@ -29,7 +29,9 @@ public class TeamHelper {
     PlayerRepository playerRepository;
 
     public TeamListDTO getTenantTeams(Long tenantId) {
+        //Create a list of teamDTO
         TeamListDTO teamListDTO = new TeamListDTO();
+        //Use findTeamsByTenant_Id to find teams of that tenant, then convert them into TeamDTO and add them to teamDTO list
         teamListDTO.teams = teamRepository.findTeamsByTenant_Id(tenantId).stream().map(TeamDTO::of).collect(Collectors.toList());
         return teamListDTO;
     }
@@ -37,9 +39,11 @@ public class TeamHelper {
     public TeamCreationResponseDTO createTenantTeam(Tenant tenant, TeamCreationRequestDTO teamCreationRequestDTO) {
         Team team = new Team();
 
-        if(teamRepository.existsByName(teamCreationRequestDTO.name)){
+        //Check name existence
+        if (teamRepository.existsByName(teamCreationRequestDTO.name)) {
             throw new RuntimeException("This team already exists");
         } else {
+            //If name not already exists, save new team
             team.setName(teamCreationRequestDTO.name);
             team.setColor(teamCreationRequestDTO.color);
             team.setTenant(tenant);
@@ -51,6 +55,7 @@ public class TeamHelper {
     }
 
     public TeamDTO getTenantTeam(Long tenantId, Long teamId) {
+        //Find team by tenant and his id and convert it into teamDTO
         return TeamDTO.of(teamRepository.findTeamByTenant_IdAndId(tenantId, teamId).orElseThrow(() -> new RuntimeException("Team not found")));
     }
 
@@ -68,17 +73,7 @@ public class TeamHelper {
     }
 
     public TeamDTO deleteTenantTeam(Long tenantId, Long teamId) {
-        /*final Boolean[] found = {false};
-        teamRepository.findTeamByTenant_Id(tenantId).forEach(team -> {
-            if (team.getId().equals(teamId)) {
-                teamRepository.deleteById(teamId);
-                found[0] = true;
-            }
-        });
-        if (found[0]) {
-            return null;
-        }
-        throw new RuntimeException("TEAM_DO_NOT_BELONG_TO_TENANT");*/
+        //If team exist, delete it
         if (teamRepository.existsById(teamId)) {
             teamRepository.deleteById(teamId);
 
@@ -89,12 +84,14 @@ public class TeamHelper {
     }
 
     public Team findByTenant_IdAndId(Long tenantId, Long teamId) {
+        //Find team by tenant's id and his id
         return teamRepository.findTeamByTenant_IdAndId(tenantId, teamId).orElseThrow(() -> new RuntimeException("Team not found"));
     }
 
     public PlayerListDTO getTeamPlayers(Team team) {
         PlayerListDTO playerListDTO = new PlayerListDTO();
 
+        //Get players in team, convert them into playerDTO and add them into playerDTO list
         playerListDTO.players = teamRepository.findById(team.getId()).get().getPlayers().stream().map(PlayerDTO::of).collect(Collectors.toList());
 
         return playerListDTO;

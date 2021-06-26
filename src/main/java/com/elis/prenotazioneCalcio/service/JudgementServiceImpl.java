@@ -49,6 +49,7 @@ public class JudgementServiceImpl implements JudgementService {
     @Override
     public JudgementCreationResponseDTO createTenantReview(Long playerId, Long tenantId, JudgementCreationRequestDTO judgmentCreationRequestDTO) {
         Tenant tenant = tenantHelper.findById(tenantId);
+        //Check player existence
         Player player = playerHelper.findById(playerId);
 
         Preconditions.checkArgument(!Objects.isNull(tenant), "Tenant does not exist");

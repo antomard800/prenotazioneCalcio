@@ -5,11 +5,13 @@ import com.elis.prenotazioneCalcio.model.Judgement;
 import java.time.LocalDate;
 
 public class JudgementDTO {
+    //Attributes to send to front-end
     public Long id;
     public Integer rating;
     public String comment;
     public LocalDate date;
 
+    //Transform a Game into a GameDTO
     public static JudgementDTO of(Judgement judgement) {
         JudgementDTO judgementDTO = new JudgementDTO();
 

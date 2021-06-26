@@ -1,4 +1,4 @@
-package com.elis.footballmanager.service;
+package com.elis.prenotazioneCalcio.service;
 
 import com.elis.prenotazioneCalcio.dto.game.GameCreationRequestDTO;
 import com.elis.prenotazioneCalcio.model.Game;
@@ -9,22 +9,26 @@ import com.elis.prenotazioneCalcio.repository.GameRepository;
 import com.elis.prenotazioneCalcio.repository.PlayerRepository;
 import com.elis.prenotazioneCalcio.repository.TeamRepository;
 import com.elis.prenotazioneCalcio.repository.TenantRepository;
-import com.elis.prenotazioneCalcio.service.GameServiceImpl;
-import com.elis.prenotazioneCalcio.service.PlayerServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.elis.prenotazioneCalcio.service.interfaces.GameService;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+@RunWith(SpringRunner.class)
 @SpringBootTest
-class GameServiceImplTest {
+public class GameServiceImplTest {
+
     @Autowired
-    GameServiceImpl gameService;
+    GameService gameService;
 
     @Autowired
     TenantRepository tenantRepository;
@@ -41,8 +45,8 @@ class GameServiceImplTest {
     @Autowired
     TeamRepository teamRepository;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         playerRepository.deleteAll();
         teamRepository.deleteAll();
         gameRepository.deleteAll();
@@ -51,7 +55,7 @@ class GameServiceImplTest {
 
     @Test
     @Transactional
-    void getTenantGames() {
+    public void getTenantGames() {
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -84,13 +88,13 @@ class GameServiceImplTest {
 
         gameService.getTenantMatches(tenant.getId());
 
-        assertNotNull(gameRepository.findAll(), "Games not found");
-        assertEquals(gameRepository.findAll().size(), 4, "Games are not 4");
+        assertNotNull("Games not found", gameRepository.findAll());
+        assertEquals("Games are not 4", 4, gameRepository.findAll().size());
     }
 
     @Test
     @Transactional
-    void createTenantGame() {
+    public void createTenantGame() {
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -112,23 +116,23 @@ class GameServiceImplTest {
 
         gameService.createTenantMatch(tenant.getId(), gameCreationRequestDTO);
 
-        assertEquals(tenant, gameRepository.findById(game.getId()).get().getTenant(), "Tenant is different");
-        assertEquals(game.getDate(), gameRepository.findById(game.getId()).get().getDate(), "Date is different");
-        assertEquals(game.getTime(), gameRepository.findById(game.getId()).get().getTime(), "Time is different");
+        assertEquals("Tenant is different", tenant, gameRepository.findById(game.getId()).get().getTenant());
+        assertEquals("Date is different", game.getDate(), gameRepository.findById(game.getId()).get().getDate());
+        assertEquals("Time is different", game.getTime(), gameRepository.findById(game.getId()).get().getTime());
 
-        assertNotNull(game.getId(), "Id is null");
-        assertNotNull(game.getDate(), "Date is null");
-        assertNotNull(game.getTime(), "Time is null");
-        assertNotNull(game.getTenant(), "Tenant is null");
+        assertNotNull("Id is null", game.getId());
+        assertNotNull("Date is null", game.getDate());
+        assertNotNull("Time is null", game.getTime());
+        assertNotNull("Tenant is null", game.getTenant());
 
-        assertEquals(game.getDate(), "03/08/2021", "Date is different");
-        assertEquals(game.getTime(), "20:50", "Time is different");
-        assertEquals(game.getTenant(), tenant, "Tenant is different");
+        assertEquals("Date is different", "03/08/2021", game.getDate());
+        assertEquals("Time is different", "20:50", game.getTime());
+        assertEquals("Tenant is different", tenant, game.getTenant());
     }
 
     @Test
     @Transactional
-    void getTenantGame() {
+    public void getTenantGame() {
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -146,12 +150,12 @@ class GameServiceImplTest {
 
         gameService.getTenantMatch(tenant.getId(), game.getId());
 
-        assertNotNull(gameRepository.findMatchByTenant_IdAndId(tenant.getId(), game.getId()), "Game not found");
-        assertEquals(game.getId(), gameRepository.findMatchByTenant_IdAndId(tenant.getId(), game.getId()).get().getId(), "Game is different");
+        assertNotNull("Game not found", gameRepository.findGameByTenant_IdAndId(tenant.getId(), game.getId()));
+        assertEquals("Game is different", game.getId(), gameRepository.findGameByTenant_IdAndId(tenant.getId(), game.getId()).get().getId());
     }
 
     @Test
-    void deleteTenantGame() {
+    public void deleteTenantGame() {
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -174,13 +178,13 @@ class GameServiceImplTest {
 
         gameService.deleteTenantMatch(tenant.getId(), firstGame.getId());
 
-        assertEquals(Optional.empty(), gameRepository.findMatchByTenant_IdAndId(tenant.getId(), firstGame.getId()), "Game not deleted");
-        assertEquals(1, gameRepository.findAll().size(), "Game not well deleted");
+        assertEquals("Game not deleted", Optional.empty(), gameRepository.findGameByTenant_IdAndId(tenant.getId(), firstGame.getId()));
+        assertEquals("Game not well deleted", 1, gameRepository.findAll().size());
     }
 
     @Test
     @Transactional
-    void getGamePlayers() {
+    public void getGamePlayers() {
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -231,15 +235,15 @@ class GameServiceImplTest {
         gameService.getMatchPlayers(tenant.getId(), firstGame.getId());
         gameService.getMatchPlayers(tenant.getId(), secondGame.getId());
 
-        assertEquals(gameRepository.findById(firstGame.getId()).get().getPlayers().size(), 2, "Registration failed");
-        assertEquals(gameRepository.findById(secondGame.getId()).get().getPlayers().size(), 1, "Registration failed");
-        assertEquals(playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), firstPlayer.getId()).get().getGames().size(), 1, "Registration failed");
-        assertEquals(playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), secondPlayer.getId()).get().getGames().size(), 2, "Registration failed");
+        assertEquals("Registration failed", 2, gameRepository.findById(firstGame.getId()).get().getPlayers().size());
+        assertEquals("Registration failed", 1, gameRepository.findById(secondGame.getId()).get().getPlayers().size());
+        assertEquals("Registration failed", 1, playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), firstPlayer.getId()).get().getGames().size());
+        assertEquals("Registration failed", 2, playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), secondPlayer.getId()).get().getGames().size());
     }
 
     @Test
     @Transactional
-    void removePlayer() {
+    public void removePlayer() {
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -291,15 +295,15 @@ class GameServiceImplTest {
 
         firstGame.getPlayers().remove(firstPlayer);
 
-        assertEquals(gameRepository.findById(firstGame.getId()).get().getPlayers().size(), 1, "Remove failed");
-        assertEquals(gameRepository.findById(secondGame.getId()).get().getPlayers().size(), 1, "Remove failed");
-        assertEquals(playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), firstPlayer.getId()).get().getGames().size(), 0, "Remove failed");
-        assertEquals(playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), secondPlayer.getId()).get().getGames().size(), 2, "Remove failed");
+        assertEquals("Remove failed", 1, gameRepository.findById(firstGame.getId()).get().getPlayers().size());
+        assertEquals("Remove failed", 1, gameRepository.findById(secondGame.getId()).get().getPlayers().size());
+        assertEquals("Remove failed", 0, playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), firstPlayer.getId()).get().getGames().size());
+        assertEquals("Remove failed", 2, playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), secondPlayer.getId()).get().getGames().size());
     }
 
     @Test
     @Transactional
-    void removePlayers() {
+    public void removePlayers() {
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -363,16 +367,16 @@ class GameServiceImplTest {
         firstTeam.getPlayers().remove(firstPlayer);
         firstTeam.getPlayers().remove(secondPlayer);
 
-        assertEquals(gameRepository.findById(firstGame.getId()).get().getPlayers().size(), 2, "Remove failed");
-        assertEquals(gameRepository.findById(secondGame.getId()).get().getPlayers().size(), 1, "Remove failed");
-        assertEquals(playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), firstPlayer.getId()).get().getGames().size(), 1, "Remove failed");
-        assertEquals(playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), secondPlayer.getId()).get().getGames().size(), 2, "Remove failed");
-        assertEquals(teamRepository.findTeamByTenant_IdAndId(tenant.getId(), firstTeam.getId()).get().getPlayers().size(), 0, "Remove failed");
+        assertEquals("Remove failed", 2, gameRepository.findById(firstGame.getId()).get().getPlayers().size());
+        assertEquals("Remove failed", 1, gameRepository.findById(secondGame.getId()).get().getPlayers().size());
+        assertEquals("Remove failed", 1, playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), firstPlayer.getId()).get().getGames().size());
+        assertEquals("Remove failed", 2, playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), secondPlayer.getId()).get().getGames().size());
+        assertEquals("Remove failed", 0, teamRepository.findTeamByTenant_IdAndId(tenant.getId(), firstTeam.getId()).get().getPlayers().size());
     }
 
     @Test
     @Transactional
-    void buildTeams(){
+    public void buildTeams() {
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -566,6 +570,9 @@ class GameServiceImplTest {
 
         gameService.buildTeams(tenant.getId(), game.getId());
 
-        assertEquals(2, game.getKeepers().size(), "There are more than 2 keepers");
+        assertEquals("There are more than 2 keepers", 2, game.getKeepers().size());
+        assertEquals("There are more than 4 backs", 4, game.getBacks().size());
+        assertEquals("There are more than 4 midfielders", 4, game.getMidfielders().size());
+        assertEquals("There are more than 4 strikers", 4, game.getStrikers().size());
     }
 }

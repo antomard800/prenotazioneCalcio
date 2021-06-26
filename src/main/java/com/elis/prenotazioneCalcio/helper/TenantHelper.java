@@ -21,11 +21,14 @@ public class TenantHelper {
     TenantRepository tenantRepository;
 
     public Tenant findById(Long tenantId) {
+        //Find tenant by id
         return tenantRepository.findById(tenantId).orElseThrow(() -> new RuntimeException("Tenant not found"));
     }
 
     public TenantListDTO getTenants() {
+        //Create a list of tenantDTO
         TenantListDTO tenantListDTO = new TenantListDTO();
+        //Use findAll to find all tenants, then convert them into TenantDTO and add them to tenantDTO list
         tenantListDTO.tenants = tenantRepository.findAll().stream().map(TenantDTO::of).collect(Collectors.toList());
         return tenantListDTO;
     }
@@ -34,14 +37,17 @@ public class TenantHelper {
         Tenant tenant = new Tenant();
         int strength = 10;
 
+        //Check email existence
         if (tenantRepository.existsByEmail(tenantCreationRequestDTO.email)) {
             throw new RuntimeException("This email already exists");
         } else {
+            //If email not already exists, save new player
             tenant.setName(tenantCreationRequestDTO.name);
             tenant.setCity(tenantCreationRequestDTO.city);
             tenant.setAddress(tenantCreationRequestDTO.address);
             tenant.setCap(tenantCreationRequestDTO.cap);
             tenant.setEmail(tenantCreationRequestDTO.email);
+            //Create new BCryptoPasswordEncoder and set player password as the encoded one
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(strength, new SecureRandom());
             tenant.setPassword(bCryptPasswordEncoder.encode(tenantCreationRequestDTO.password));
 
@@ -52,6 +58,7 @@ public class TenantHelper {
     }
 
     public TenantDTO getTenant(Long tenantId) {
+        //Find tenant by his id and convert it into tenantDTO
         return TenantDTO.of(tenantRepository.findById(tenantId).orElseThrow(() -> new RuntimeException("Tenant not found")));
     }
 
@@ -85,10 +92,14 @@ public class TenantHelper {
     }*/
 
     public TenantDTO loginTenant(String email, String password) {
+        //Find player by email
         Tenant tenantTmp = tenantRepository.findByEmail(email);
+        int strength = 10;
 
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        //Create new BCryptoPasswordEncoder and match the inserted password with the password saved in DB associated with email
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(strength);
         if (bCryptPasswordEncoder.matches(password, tenantTmp.getPassword())) {
+            //Find tenant by email and password and convert it into tenantDTO
             return TenantDTO.of(tenantRepository.findByEmailAndPassword(email, tenantTmp.getPassword()).orElseThrow(() -> new RuntimeException("Wrong credentials")));
         } else {
             throw new RuntimeException("Wrong credentials");

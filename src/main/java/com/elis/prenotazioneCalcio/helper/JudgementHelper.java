@@ -22,8 +22,10 @@ public class JudgementHelper {
     JudgementRepository judgementRepository;
 
     public JudgementListDTO getTenantReviews(Long tenantId) {
+        //Create a list of judgementDTO
         JudgementListDTO judgementListDTO = new JudgementListDTO();
 
+        //Use findReviewsByTenant_Id to find judgements of that tenant, then convert them into JudgementDTO and add them to judgementDTO list
         judgementListDTO.reviews = judgementRepository.findReviewsByTenant_Id(tenantId).stream().map(JudgementDTO::of).collect(Collectors.toList());
 
         return judgementListDTO;
@@ -40,6 +42,7 @@ public class JudgementHelper {
     public JudgementCreationResponseDTO createTenantReview(Player player, Tenant tenant, JudgementCreationRequestDTO judgmentCreationRequestDTO) {
         Judgement judgement = new Judgement();
 
+        //Save new judgement
         judgement.setRating(judgmentCreationRequestDTO.rating);
         judgement.setComment(judgmentCreationRequestDTO.comment);
         judgement.setDate(LocalDate.now());

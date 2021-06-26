@@ -1,4 +1,4 @@
-package com.elis.footballmanager.service;
+package com.elis.prenotazioneCalcio.service;
 
 import com.elis.prenotazioneCalcio.dto.team.TeamCreationRequestDTO;
 import com.elis.prenotazioneCalcio.model.Game;
@@ -9,20 +9,21 @@ import com.elis.prenotazioneCalcio.repository.GameRepository;
 import com.elis.prenotazioneCalcio.repository.PlayerRepository;
 import com.elis.prenotazioneCalcio.repository.TeamRepository;
 import com.elis.prenotazioneCalcio.repository.TenantRepository;
-import com.elis.prenotazioneCalcio.service.PlayerServiceImpl;
-import com.elis.prenotazioneCalcio.service.TeamServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @SpringBootTest
+@RunWith(SpringRunner.class)
 public class TeamServiceImplTest {
     @Autowired
     TenantRepository tenantRepository;
@@ -42,8 +43,8 @@ public class TeamServiceImplTest {
     @Autowired
     PlayerServiceImpl playerService;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         playerRepository.deleteAll();
         teamRepository.deleteAll();
         gameRepository.deleteAll();
@@ -51,7 +52,7 @@ public class TeamServiceImplTest {
     }
 
     @Test
-    void getTenantTeams(){
+    public void getTenantTeams(){
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -74,13 +75,13 @@ public class TeamServiceImplTest {
 
         teamService.getTenantTeams(tenant.getId());
 
-        assertNotNull(teamRepository.findTeamsByTenant_Id(tenant.getId()), "There are no teams");
-        assertEquals(2, teamRepository.findTeamsByTenant_Id(tenant.getId()).size(), "Teams are not 2");
+        assertNotNull("There are no teams" ,teamRepository.findTeamsByTenant_Id(tenant.getId()));
+        assertEquals("Teams are not 2", 2, teamRepository.findTeamsByTenant_Id(tenant.getId()).size());
     }
 
     @Test
     @Transactional
-    void createTenantTeam(){
+    public void createTenantTeam(){
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -90,11 +91,11 @@ public class TeamServiceImplTest {
                 .password("ciao")
                 .build());
 
-        Team team = teamRepository.save(Team.builder()
+        Team team = Team.builder()
                 .name("Milan")
                 .color("Red")
                 .tenant(tenant)
-                .build());
+                .build();
 
         TeamCreationRequestDTO teamCreationRequestDTO = new TeamCreationRequestDTO();
         teamCreationRequestDTO.name = team.getName();
@@ -102,13 +103,15 @@ public class TeamServiceImplTest {
 
         teamService.createTenantTeam(tenant.getId(), teamCreationRequestDTO);
 
-        assertEquals(tenant, teamRepository.findById(team.getId()).get().getTenant(), "Tenant is different");
-        assertEquals(team.getName(), teamRepository.findById(team.getId()).get().getName(), "Name is different");
-        assertEquals(team.getColor(), teamRepository.findById(team.getId()).get().getColor(), "Color is different");
+        team = teamRepository.save(team);
+
+        assertEquals("Tenant is different", tenant, teamRepository.findById(team.getId()).get().getTenant());
+        assertEquals("Name is different", team.getName(), teamRepository.findById(team.getId()).get().getName());
+        assertEquals("Color is different", team.getColor(), teamRepository.findById(team.getId()).get().getColor());
     }
 
     @Test
-    void getTenantTeam() {
+    public void getTenantTeam() {
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -126,12 +129,12 @@ public class TeamServiceImplTest {
 
         teamService.getTenantTeam(tenant.getId(), team.getId());
 
-        assertNotNull(teamRepository.findTeamByTenant_IdAndId(tenant.getId(), team.getId()).get().getId(), "There are no team");
-        assertEquals(team.getId(), teamRepository.findTeamByTenant_IdAndId(tenant.getId(), team.getId()).get().getId(), "Team is different");
+        assertNotNull("There are no team", teamRepository.findTeamByTenant_IdAndId(tenant.getId(), team.getId()).get().getId());
+        assertEquals("Team is different", team.getId(), teamRepository.findTeamByTenant_IdAndId(tenant.getId(), team.getId()).get().getId());
     }
 
     @Test
-    void deleteTenantTeam() {
+    public void deleteTenantTeam() {
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -154,13 +157,13 @@ public class TeamServiceImplTest {
 
         teamService.deleteTenantTeam(tenant.getId(), firstTeam.getId());
 
-        assertEquals(Optional.empty(), teamRepository.findTeamByTenant_IdAndId(tenant.getId(), firstTeam.getId()), "Team not deleted");
-        assertEquals(1, teamRepository.findTeamsByTenant_Id(tenant.getId()).size(), "Team not deleted");
+        assertEquals("Team not deleted", Optional.empty(), teamRepository.findTeamByTenant_IdAndId(tenant.getId(), firstTeam.getId()));
+        assertEquals("Team not deleted", 1, teamRepository.findTeamsByTenant_Id(tenant.getId()).size());
     }
 
     @Test
     @Transactional
-    void getTeamPlayers() {
+     public void getTeamPlayers() {
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -227,7 +230,7 @@ public class TeamServiceImplTest {
 
         teamService.getTeamPlayers(tenant.getId(), game.getId(), team.getId());
 
-        assertEquals(4, teamRepository.findTeamByTenant_IdAndId(tenant.getId(), team.getId()).get().getPlayers().size(), "There are not 4 players");
-        assertEquals(15, teamRepository.findTeamByTenant_IdAndId(tenant.getId(), team.getId()).get().getPlayersTotalRating(), "Total rating is not 15");
+        assertEquals("There are not 4 players", 4, teamRepository.findTeamByTenant_IdAndId(tenant.getId(), team.getId()).get().getPlayers().size());
+        assertEquals("Total rating is not 15", Integer.valueOf(15), teamRepository.findTeamByTenant_IdAndId(tenant.getId(), team.getId()).get().getPlayersTotalRating());
     }
 }

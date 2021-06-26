@@ -29,10 +29,20 @@ public class PlayerHelper {
     @Autowired
     GameHelper gameHelper;
 
+    public Player findById(Long playerId) {
+        //Find player by id
+        return playerRepository.findById(playerId).orElseThrow(() -> new RuntimeException("Player not found"));
+    }
+
+    public Player findByTenantIdAndPlayerId(Long tenantId, Long playerId) {
+        //Find player by tenant's id and his id
+        return playerRepository.findPlayerByTenant_IdAndId(tenantId, playerId).orElseThrow(() -> new RuntimeException("Player not found"));
+    }
+
     public PlayerListDTO getTenantPlayers(Long tenantId) {
         //Create a list of playerDTO
         PlayerListDTO playerListDTO = new PlayerListDTO();
-        //Use findPlayerByTenant_Id to find players of that tenant, then convert them in PlayerDTO and add them to playerDTO list
+        //Use findPlayersByTenant_Id to find players of that tenant, then convert them into PlayerDTO and add them to playerDTO list
         playerListDTO.players = playerRepository.findPlayersByTenant_Id(tenantId).stream().map(PlayerDTO::of).collect(Collectors.toList());
         return playerListDTO;
     }
@@ -49,7 +59,7 @@ public class PlayerHelper {
             player.setName(playerCreationRequestDTO.name);
             player.setSurname(playerCreationRequestDTO.surname);
             player.setEmail(playerCreationRequestDTO.email);
-            //Create new BCryptoPasswordEncoder and sat player password as the encoded one
+            //Create new BCryptoPasswordEncoder and set player password as the encoded one
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(strength, new SecureRandom());
             player.setPassword(bCryptPasswordEncoder.encode(playerCreationRequestDTO.password));
             player.setRating(playerCreationRequestDTO.rating);
@@ -74,6 +84,7 @@ public class PlayerHelper {
         player.setId(playerId);
         player.setTenant(tenant);
         player.setEmail(playerCreationRequestDTO.email);
+        //If sent data are not null, they must be updated in database
         if (playerCreationRequestDTO.name != null) {
             player.setName(playerCreationRequestDTO.name);
         } else {
@@ -95,7 +106,7 @@ public class PlayerHelper {
             player.setRole(playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), playerId).get().getRole());
         }
         if (playerCreationRequestDTO.password != null) {
-            //Create new BCryptoPasswordEncoder and sat player password as the encoded one
+            //Create new BCryptoPasswordEncoder and set player password as the encoded one
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(strength, new SecureRandom());
             player.setPassword(bCryptPasswordEncoder.encode(playerCreationRequestDTO.password));
         } else {
@@ -136,19 +147,10 @@ public class PlayerHelper {
     @Transactional
     public PlayerDTO signToMatch(Player player, Game game) {
         //Add player to the game
-        //game.addPlayer(player);
-        //player.getGames().add(game);
         player.addGame(game);
-        log.info("Added player {} to game {}", player.getEmail(), game.getId());
-        //gameHelper.saveOrUpdate(game);
         playerRepository.save(player);
 
         return new PlayerDTO();
-    }
-
-    public Player findByTenantIdAndPlayerId(Long tenantId, Long playerId) {
-        //Find player by tenant and his id
-        return playerRepository.findPlayerByTenant_IdAndId(tenantId, playerId).orElseThrow(() -> new RuntimeException("Player not found"));
     }
 
     public PlayerCreationResponseDTO updateTenantPlayerRating(Player player, PlayerCreationRequestDTO playerCreationRequestDTO) {
@@ -160,16 +162,11 @@ public class PlayerHelper {
         return null;
     }
 
-    public Player findById(Long playerId) {
-        //Find player by id
-        return playerRepository.findById(playerId).orElseThrow(() -> new RuntimeException("Player not found"));
-    }
-
     public GameListDTO getPlayerMatches(Player player) {
         GameListDTO gameListDTO = new GameListDTO();
 
         //Get player's games, convert them into gameDTO and add them into gameDTO list
-        gameListDTO.matches = player.getGames().stream().map(GameDTO::of).collect(Collectors.toList());
+        gameListDTO.games = player.getGames().stream().map(GameDTO::of).collect(Collectors.toList());
 
         return gameListDTO;
     }

@@ -18,15 +18,13 @@ public class Tenant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private String city;
     private String address;
     private Integer cap;
     private String email;
     private String password;
-
-    @OneToMany(mappedBy = "tenant", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Pitch> pitches = new ArrayList<>();
 
     @OneToMany(mappedBy = "tenant", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Player> players;
@@ -40,8 +38,10 @@ public class Tenant {
     @OneToMany(mappedBy = "tenant", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Judgement> judgements;
 
+    //Add team in teams
     public void addTeam(Team team) {
-        if(Objects.isNull(teams)){
+        //If is not instantiated, create it as new ArrayList<>(), then add team
+        if (Objects.isNull(teams)) {
             teams = new ArrayList<>();
         }
 

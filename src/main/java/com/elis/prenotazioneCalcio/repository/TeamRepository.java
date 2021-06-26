@@ -9,11 +9,12 @@ import java.util.Optional;
 
 @Repository
 public interface TeamRepository extends JpaRepository<Team, Long> {
-    Optional<Team> findTeamByTenant_IdAndId(Long tenantId, Long teamId);
-
+    //Return all teams of one tenant
     List<Team> findTeamsByTenant_Id(Long tenantId);
 
-    boolean existsByName(String name);
+    //Return one team based on his id and tenant's id
+    Optional<Team> findTeamByTenant_IdAndId(Long tenantId, Long teamId);
 
-//    void deleteByTenant_IdAndId(Long tenantId, Long teamId);
+    //Return true if name exists in the database
+    boolean existsByName(String name);
 }

@@ -9,7 +9,10 @@ import java.util.Optional;
 
 @Repository
 public interface GameRepository extends JpaRepository<Game, Long> {
-    List<Game> findMatchesByTenant_Id(Long tenantId);
+    //Return all games of one tenant
+    List<Game> findGamesByTenant_Id(Long tenantId);
 
-    Optional<Game> findMatchByTenant_IdAndId(Long tenantId, Long matchId);
+    //Return one player based on his id and tenant's id
+    Optional<Game> findGameByTenant_IdAndId(Long tenantId, Long matchId);
 }
+

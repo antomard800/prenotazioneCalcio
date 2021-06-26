@@ -23,7 +23,7 @@ public interface GameService {
 
     PlayerListDTO getMatchPlayers(Long tenantId, Long gameId);
 
-    GameCreationResponseDTO removePlayer(Long tenantId, Long gameId, Long playerId/*, GameCreationRequestDTO gameCreationRequestDTO*/);
+    GameCreationResponseDTO removePlayer(Long tenantId, Long gameId, Long playerId);
 
     GameCreationResponseDTO removePlayers(Long tenantId, Long gameId);
 

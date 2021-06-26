@@ -54,11 +54,11 @@ public class GameController {
     //Query to remove one player from the game
 
     @PatchMapping("/{tenantId}/{gameId}/removePlayer/{playerId}")
-    public GameCreationResponseDTO removePlayer(@PathVariable("tenantId") Long tenantId, @PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId/*, @RequestBody GameCreationRequestDTO gameCreationRequestDTO*/) {
-        return gameService.removePlayer(tenantId, gameId, playerId/*, gameCreationRequestDTO*/);
+    public GameCreationResponseDTO removePlayer(@PathVariable("tenantId") Long tenantId, @PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId) {
+        return gameService.removePlayer(tenantId, gameId, playerId);
     }
 
-    //Query to remove all players from the game
+    //Query to remove all players from game's teams
 
     @PatchMapping("{tenantId}/{gameId}/removePlayers")
     public GameCreationResponseDTO removePlayers(@PathVariable("tenantId") Long tenantId, @PathVariable("gameId") Long gameId) {

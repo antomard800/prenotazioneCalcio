@@ -5,7 +5,7 @@ import com.elis.prenotazioneCalcio.model.Game;
 import java.util.Objects;
 
 public class GameDTO {
-
+    //Attributes to send to front-end
     public Long id;
     public String date;
     public String time;
@@ -15,13 +15,15 @@ public class GameDTO {
     public Integer numberOfMidfielders;
     public Integer numberOfStrikers;
 
+    //Transform a Game into a GameDTO
     public static GameDTO of(Game game) {
         GameDTO gameDTO = new GameDTO();
 
         gameDTO.id = game.getId();
         gameDTO.date = game.getDate();
         gameDTO.time = game.getTime();
-        if(!Objects.isNull(game.getPlayers())){
+        //Check if there are players signed to game
+        if (!Objects.isNull(game.getPlayers())) {
             gameDTO.numberOfPlayers = game.getPlayers().size();
             gameDTO.numberOfKeepers = game.numberOfKeepers();
             gameDTO.numberOfBacks = game.numberOfBacks();

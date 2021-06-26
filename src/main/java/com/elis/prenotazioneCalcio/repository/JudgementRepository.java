@@ -8,7 +8,6 @@ import java.util.List;
 
 @Repository
 public interface JudgementRepository extends JpaRepository<Judgement, Long> {
+    //Return all judgements of one tenant
     List<Judgement> findReviewsByTenant_Id(Long tenantId);
-
-    //List<Judgement> findReviewsByPlayer_Id(Long playerId);
 }

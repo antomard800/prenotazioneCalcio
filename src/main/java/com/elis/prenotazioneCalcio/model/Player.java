@@ -43,8 +43,10 @@ public class Player {
     @OneToMany(mappedBy = "player", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Judgement> judgements;
 
-    public void addGame(Game game){
-        if(Objects.isNull(games)){
+    //Add game in games
+    public void addGame(Game game) {
+        //If is not instantiated, create it as new ArrayList<>(), then add game
+        if (Objects.isNull(games)) {
             games = new ArrayList<>();
         }
         this.games.add(game);

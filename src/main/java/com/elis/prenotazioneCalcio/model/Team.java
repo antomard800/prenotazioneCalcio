@@ -31,8 +31,10 @@ public class Team {
     @OneToMany(mappedBy = "team", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Player> players;
 
+    //Get total rating of players that are in team
     public Integer getPlayersTotalRating() {
-        if(Objects.isNull(players)){
+        //If players is not instantiated, create it as new ArrayList<>()
+        if (Objects.isNull(players)) {
             players = new ArrayList<>();
         }
 
@@ -44,9 +46,10 @@ public class Team {
         return totalRating;
     }
 
-
+    //Add player in players
     public void addPlayer(Player player) {
-        if(Objects.isNull(players)){
+        //If is not instantiated, create it as new ArrayList<>(), then add player
+        if (Objects.isNull(players)) {
             players = new ArrayList<>();
         }
 

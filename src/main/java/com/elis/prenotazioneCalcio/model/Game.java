@@ -15,19 +15,24 @@ import java.util.Objects;
 @ToString
 @Builder
 public class Game {
-    @ManyToMany(mappedBy = "games", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    List<Player> players;
-    @OneToMany(mappedBy = "game", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    List<Team> teams;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String date;
     private String time;
+
     @ManyToOne
     @JoinColumn(name = "tenant_id")
     private Tenant tenant;
 
+    @ManyToMany(mappedBy = "games", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    List<Player> players;
+
+    @OneToMany(mappedBy = "game", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    List<Team> teams;
+
+    //Return number of keepers signed to game
     public Integer numberOfKeepers() {
         Integer counter = 0;
 
@@ -40,6 +45,7 @@ public class Game {
         return counter;
     }
 
+    //Return keepers signed to game
     public List<Player> getKeepers() {
         List<Player> keepers = new ArrayList<>();
 
@@ -52,6 +58,7 @@ public class Game {
         return keepers;
     }
 
+    //Return number of backs signed to game
     public Integer numberOfBacks() {
         Integer counter = 0;
 
@@ -64,6 +71,7 @@ public class Game {
         return counter;
     }
 
+    //Return backs signed to game
     public List<Player> getBacks() {
         List<Player> backs = new ArrayList<>();
 
@@ -75,6 +83,7 @@ public class Game {
         return backs;
     }
 
+    //Return number of midfielders signed to game
     public Integer numberOfMidfielders() {
         Integer counter = 0;
 
@@ -87,6 +96,7 @@ public class Game {
         return counter;
     }
 
+    //Return midfielders signed to game
     public List<Player> getMidfielders() {
         List<Player> midfielders = new ArrayList<>();
 
@@ -99,6 +109,7 @@ public class Game {
         return midfielders;
     }
 
+    //Return number of strikers signed to game
     public Integer numberOfStrikers() {
         Integer counter = 0;
 
@@ -111,6 +122,7 @@ public class Game {
         return counter;
     }
 
+    //Return strikers signed to game
     public List<Player> getStrikers() {
         List<Player> strikers = new ArrayList<>();
 
@@ -123,16 +135,20 @@ public class Game {
         return strikers;
     }
 
+    //Add player in players
     public void addPlayer(Player player) {
-        if(Objects.isNull(players)){
+        //If is not instantiated, create it as new ArrayList<>(), then add team
+        if (Objects.isNull(players)) {
             players = new ArrayList<>();
         }
 
         this.players.add(player);
     }
 
+    //Add team in teams
     public void addTeam(Team team) {
-        if(Objects.isNull(teams)){
+        //If is not instantiated, create it as new ArrayList<>(), then add player
+        if (Objects.isNull(teams)) {
             teams = new ArrayList<>();
         }
 

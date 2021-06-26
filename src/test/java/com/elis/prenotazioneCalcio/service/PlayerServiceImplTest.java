@@ -1,4 +1,4 @@
-package com.elis.footballmanager.service;
+package com.elis.prenotazioneCalcio.service;
 
 import com.elis.prenotazioneCalcio.dto.player.PlayerCreationRequestDTO;
 import com.elis.prenotazioneCalcio.helper.PlayerHelper;
@@ -8,18 +8,19 @@ import com.elis.prenotazioneCalcio.model.Tenant;
 import com.elis.prenotazioneCalcio.repository.GameRepository;
 import com.elis.prenotazioneCalcio.repository.PlayerRepository;
 import com.elis.prenotazioneCalcio.repository.TenantRepository;
-import com.elis.prenotazioneCalcio.service.PlayerServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @SpringBootTest
+@RunWith(SpringRunner.class)
 public class PlayerServiceImplTest {
     @Autowired
     TenantRepository tenantRepository;
@@ -36,16 +37,16 @@ public class PlayerServiceImplTest {
     @Autowired
     PlayerServiceImpl playerService;
 
-    @BeforeEach
+    @Before
     @Transactional
-    void setup() {
+    public void setup() {
         playerRepository.deleteAll();
         gameRepository.deleteAll();
         tenantRepository.deleteAll();
     }
 
     @Test
-    void getTenantPlayers() {
+    public void getTenantPlayers() {
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -94,13 +95,13 @@ public class PlayerServiceImplTest {
 
         playerService.getTenantPlayers(tenant.getId());
 
-        assertNotNull(playerRepository.findPlayersByTenant_Id(tenant.getId()), "Players not found");
-        assertEquals(playerRepository.findPlayersByTenant_Id(tenant.getId()).size(), 4, "Players are not 4");
+        assertNotNull("Players not found", playerRepository.findPlayersByTenant_Id(tenant.getId()));
+        assertEquals("Players are not 4", 4, playerRepository.findPlayersByTenant_Id(tenant.getId()).size());
     }
 
     @Test
     @Transactional
-    void createTenantPlayer() {
+    public void createTenantPlayer() {
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -132,34 +133,34 @@ public class PlayerServiceImplTest {
 
         player = playerRepository.save(player);
 
-        assertEquals(tenant, playerRepository.findById(player.getId()).get().getTenant(), "Tenant is different");
-        assertEquals(player.getName(), playerRepository.findById(player.getId()).get().getName(), "Name is different");
-        assertEquals(player.getSurname(), playerRepository.findById(player.getId()).get().getSurname(), "Surname is different");
-        assertEquals(player.getRating(), playerRepository.findById(player.getId()).get().getRating(), "Rating is different");
-        assertEquals(player.getRole(), playerRepository.findById(player.getId()).get().getRole(), "Role is different");
-        assertEquals(player.getEmail(), playerRepository.findById(player.getId()).get().getEmail(), "Email is different");
-        assertEquals(player.getPassword(), playerRepository.findById(player.getId()).get().getPassword(), "Password is different");
+        assertEquals("Tenant is different", tenant, playerRepository.findById(player.getId()).get().getTenant());
+        assertEquals("Name is different", player.getName(), playerRepository.findById(player.getId()).get().getName());
+        assertEquals("Surname is different", player.getSurname(), playerRepository.findById(player.getId()).get().getSurname());
+        assertEquals("Rating is different", player.getRating(), playerRepository.findById(player.getId()).get().getRating());
+        assertEquals("Role is different", player.getRole(), playerRepository.findById(player.getId()).get().getRole());
+        assertEquals("Email is different", player.getEmail(), playerRepository.findById(player.getId()).get().getEmail());
+        assertEquals("Password is different", player.getPassword(), playerRepository.findById(player.getId()).get().getPassword());
 
-        assertNotNull(player.getId(), "Id is null");
-        assertNotNull(player.getName(), "Name is null");
-        assertNotNull(player.getSurname(), "Surname is null");
-        assertNotNull(player.getRating(), "Rating is null");
-        assertNotNull(player.getRole(), "Role is null");
-        assertNotNull(player.getEmail(), "Email is null");
-        assertNotNull(player.getPassword(), "Password is null");
-        assertNotNull(player.getTenant(), "Tenant is null");
+        assertNotNull("Id is null", player.getId());
+        assertNotNull("Name is null", player.getName());
+        assertNotNull("Surname is null", player.getSurname());
+        assertNotNull("Rating is null", player.getRating());
+        assertNotNull("Role is null", player.getRole());
+        assertNotNull("Email is null", player.getEmail());
+        assertNotNull("Password is null", player.getPassword());
+        assertNotNull("Tenant is null", player.getTenant());
 
-        assertEquals(player.getName(), "Antonio", "Name is different");
-        assertEquals(player.getSurname(), "DAddetta", "Surname is different");
-        assertEquals(player.getRating(), 4, "Rating is different");
-        assertEquals(player.getRole(), "Centrocampista", "Role is different");
-        assertEquals(player.getEmail(), "antonio@gmail.com", "Email is different");
-        assertEquals(player.getPassword(), "antonio", "Password is different");
-        assertEquals(player.getTenant(), tenant, "Tenant is different");
+        assertEquals("Name is different", "Antonio", player.getName());
+        assertEquals("Surname is different", "DAddetta", player.getSurname());
+        assertEquals("Rating is different", Integer.valueOf(4), player.getRating());
+        assertEquals("Role is different", "Centrocampista", player.getRole());
+        assertEquals("Email is different", "antonio@gmail.com", player.getEmail());
+        assertEquals("Password is different", "antonio", player.getPassword());
+        assertEquals("Tenant is different", tenant, player.getTenant());
     }
 
     @Test
-    void getTenantPlayer() {
+    public void getTenantPlayer() {
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -181,89 +182,13 @@ public class PlayerServiceImplTest {
 
         playerService.getTenantPlayer(tenant.getId(), player.getId());
 
-        assertNotNull(playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), player.getId()), "Player not found");
-        assertEquals(player.getEmail(), playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), player.getId()).get().getEmail(), "Player is different");
-    }
-
-    @Test
-    void deleteTenantPlayer() {
-        Tenant tenant = tenantRepository.save(Tenant.builder()
-                .name("Elis")
-                .city("Roma")
-                .address("Via")
-                .cap(159)
-                .email("ciao@gmail.com")
-                .password("ciao")
-                .build());
-
-        Player firstPlayer = playerRepository.save(Player.builder()
-                .name("Antonio")
-                .surname("DAddetta")
-                .rating(4)
-                .role("Centrocampista")
-                .email("antonio@gmail.com")
-                .password("antonio")
-                .tenant(tenant)
-                .build());
-        Player secondPlayer = playerRepository.save(Player.builder()
-                .name("Giacomo")
-                .surname("Calianno")
-                .rating(5)
-                .role("Difensore")
-                .email("giacomo@gmail.com")
-                .password("giacomo")
-                .tenant(tenant)
-                .build());
-
-        playerService.deleteTenantPlayer(tenant.getId(), firstPlayer.getId());
-
-        assertEquals(Optional.empty(), playerRepository.findById(firstPlayer.getId()), "Player not deleted");
-        assertEquals(playerRepository.findPlayersByTenant_Id(tenant.getId()).size(), 1, "Player not deleted from tenant");
-    }
-
-    @Test
-    void loginPlayer() {
-        Tenant tenant = Tenant.builder()
-                .name("Elis")
-                .city("Roma")
-                .address("Via")
-                .cap(159)
-                .email("ciao@gmail.com")
-                .password("ciao")
-                .build();
-
-        Player firstPlayer = Player.builder()
-                .name("Antonio")
-                .surname("DAddetta")
-                .rating(4)
-                .role("Centrocampista")
-                .email("antonio@gmail.com")
-                .password("antonio")
-                .build();
-        Player secondPlayer = Player.builder()
-                .name("Giacomo")
-                .surname("Calianno")
-                .rating(5)
-                .role("Difensore")
-                .email("giacomo@gmail.com")
-                .password("giacomo")
-                .build();
-
-        tenant = tenantRepository.save(tenant);
-
-        firstPlayer.setTenant(tenant);
-        secondPlayer.setTenant(tenant);
-
-        playerRepository.save(firstPlayer);
-        playerRepository.save(secondPlayer);
-
-        assertEquals(firstPlayer.getId(), playerRepository.findByEmailAndPassword("antonio@gmail.com", "antonio").get().getId(), "Player login failed");
-        assertNotEquals(secondPlayer.getId(), playerRepository.findByEmailAndPassword("antonio@gmail.com", "antonio").get().getId(), "Player login success");
+        assertNotNull("Player not found", playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), player.getId()));
+        assertEquals("Player is different", player.getEmail(), playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), player.getId()).get().getEmail());
     }
 
     @Test
     @Transactional
-    void signToMatch() {
+    public void signToMatch() {
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -311,15 +236,15 @@ public class PlayerServiceImplTest {
         firstGame.addPlayer(secondPlayer);
         secondGame.addPlayer(secondPlayer);
 
-        assertEquals(gameRepository.findById(firstGame.getId()).get().getPlayers().size(), 2, "Registration failed");
-        assertEquals(gameRepository.findById(secondGame.getId()).get().getPlayers().size(), 1, "Registration failed");
-        assertEquals(playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), firstPlayer.getId()).get().getGames().size(), 1, "Registration failed");
-        assertEquals(playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), secondPlayer.getId()).get().getGames().size(), 2, "Registration failed");
+        assertEquals("Registration failed", 2, gameRepository.findById(firstGame.getId()).get().getPlayers().size());
+        assertEquals("Registration failed", 1, gameRepository.findById(secondGame.getId()).get().getPlayers().size());
+        assertEquals("Registration failed", 1, playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), firstPlayer.getId()).get().getGames().size());
+        assertEquals("Registration failed", 2, playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), secondPlayer.getId()).get().getGames().size());
     }
 
     @Test
     @Transactional
-    void updateTenantPlayerRating(){
+    public void updateTenantPlayerRating() {
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -361,12 +286,12 @@ public class PlayerServiceImplTest {
 
         playerService.updateTenantPlayerRating(tenant.getId(), game.getId(), secondPlayer.getId(), playerCreationRequestDTO);
 
-        assertEquals(secondPlayer.getRating(), 3, "Rating update failed");
+        assertEquals("Rating update failed", Integer.valueOf(3), secondPlayer.getRating());
     }
 
     @Test
     @Transactional
-    void getPlayerMatches() {
+    public void getPlayerMatches() {
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -417,9 +342,9 @@ public class PlayerServiceImplTest {
         firstGame.addPlayer(secondPlayer);
         secondGame.addPlayer(secondPlayer);
 
-        assertEquals(gameRepository.findById(firstGame.getId()).get().getPlayers().size(), 2, "Registration failed");
-        assertEquals(gameRepository.findById(secondGame.getId()).get().getPlayers().size(), 1, "Registration failed");
-        assertEquals(playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), firstPlayer.getId()).get().getGames().size(), 1, "Registration failed");
-        assertEquals(playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), secondPlayer.getId()).get().getGames().size(), 2, "Registration failed");
+        assertEquals("Registration failed", 2, gameRepository.findById(firstGame.getId()).get().getPlayers().size());
+        assertEquals("Registration failed", 1, gameRepository.findById(secondGame.getId()).get().getPlayers().size());
+        assertEquals("Registration failed", 1, playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), firstPlayer.getId()).get().getGames().size());
+        assertEquals("Registration failed", 2, playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), secondPlayer.getId()).get().getGames().size());
     }
 }

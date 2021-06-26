@@ -80,7 +80,7 @@ public class GameServiceImpl implements GameService {
         Preconditions.checkArgument(!Objects.isNull(tenant), "Tenant does not exist");
         Preconditions.checkArgument(gameId != null, "Match id cannot be null");
 
-        return gameHelper.deleteTenantMatch(tenantId, gameId);
+        return gameHelper.deleteTenantMatch(gameId);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public GameCreationResponseDTO removePlayer(Long tenantId, Long gameId, Long playerId/*, GameCreationRequestDTO gameCreationRequestDTO*/) {
+    public GameCreationResponseDTO removePlayer(Long tenantId, Long gameId, Long playerId) {
         Tenant tenant = tenantHelper.findById(tenantId);
         //Check game and player existence
         Game game = gameHelper.findByTenantIdAndGameId(tenantId, gameId);
