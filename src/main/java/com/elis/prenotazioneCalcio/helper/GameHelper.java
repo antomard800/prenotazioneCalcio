@@ -150,12 +150,15 @@ public class GameHelper {
 
         //Choose random firstTeam from database
         Team firstTeam = tenant.getTeams().get((int) (Math.random() * tenant.getTeams().size()));
+        System.out.println("FT: " + firstTeam.getId());
         game.addTeam(firstTeam);
         //Choose random secondTeam from database
         Team secondTeam = tenant.getTeams().get((int) (Math.random() * tenant.getTeams().size()));
+        System.out.println("ST: " + secondTeam.getId());
         //Until random secondTeam is chosen for another game, choose another one randomly
-        while (secondTeam.getGame() != null && secondTeam.getGame().equals(game)) {
+        while (game.getTeams().get(0) == secondTeam) {
             secondTeam = tenant.getTeams().get((int) (Math.random() * tenant.getTeams().size()));
+            System.out.println("ST: " + secondTeam.getId());
         }
         game.addTeam(secondTeam);
 
