@@ -39,6 +39,7 @@ public class JudgementServiceImplTest {
     @Autowired
     PlayerRepository playerRepository;
 
+    //Delete data from local database before each test
     @Before
     public void setUp() {
         judgementRepository.deleteAll();
@@ -49,6 +50,7 @@ public class JudgementServiceImplTest {
 
     @Test
     public void getTenantReviews() {
+        //Create tenant using builder and save it into local database and in a local variable
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -58,6 +60,7 @@ public class JudgementServiceImplTest {
                 .password("ciao")
                 .build());
 
+        //Create player using builder and save it into local database and in a local variable
         Player firstPlayer = playerRepository.save(Player.builder()
                 .name("Antonio")
                 .surname("DAddetta")
@@ -77,6 +80,7 @@ public class JudgementServiceImplTest {
                 .tenant(tenant)
                 .build());
 
+        //Create judgement using builder and save it into local database and in a local variable
         Judgement firstJudgement = judgementRepository.save(Judgement.builder()
                 .rating(4)
                 .comment("Bella struttura")
@@ -90,9 +94,12 @@ public class JudgementServiceImplTest {
                 .tenant(tenant)
                 .build());
 
+        //Call relative service test method
         judgementService.getTenantReviews(tenant.getId());
 
+        //Check if judgement entity is not null
         assertNotNull("There are no judgements", judgementRepository.findReviewsByTenant_Id(tenant.getId()));
+        //Check if judgement entity records are 2
         assertEquals("Judgements are not 2", 2, judgementRepository.findReviewsByTenant_Id(tenant.getId()).size());
     }
 
@@ -126,13 +133,15 @@ public class JudgementServiceImplTest {
                 .tenant(tenant)
                 .build());
 
+        //Create JudgementCreationRequestDTO variable to call service method createTenantReview()
         JudgementCreationRequestDTO judgementCreationRequestDTO = new JudgementCreationRequestDTO();
         judgementCreationRequestDTO.rating = judgement.getRating();
         judgementCreationRequestDTO.comment = judgement.getComment();
 
         judgementService.createTenantReview(player.getId(), tenant.getId(), judgementCreationRequestDTO);
-
+        //Check if the judgement has been created
         assertNotNull("Judgement not created", judgementRepository.findById(judgement.getId()));
+        //Check if data saved in database are equals to insert data
         assertEquals("Tenant is different", tenant, judgementRepository.findById(judgement.getId()).get().getTenant());
         assertEquals("Player is different", player, judgementRepository.findById(judgement.getId()).get().getPlayer());
         assertEquals("Rating is different", judgement.getRating(), judgementRepository.findById(judgement.getId()).get().getRating());

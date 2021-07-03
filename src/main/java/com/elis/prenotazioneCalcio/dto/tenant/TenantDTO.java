@@ -12,7 +12,7 @@ public class TenantDTO {
     public Integer cap;
     public String email;
 
-    //Transform a Game into a GameDTO
+    //Transform a Tenant into a TenantDTO
     public static TenantDTO of(Tenant tenant) {
         TenantDTO tenantDTO = new TenantDTO();
 

@@ -9,7 +9,7 @@ public class TeamDTO {
     public String color;
     public Long tenant;
 
-    //Transform a Game into a GameDTO
+    //Transform a Team into a TeamDTO
     public static TeamDTO of(Team team) {
         TeamDTO teamDTO = new TeamDTO();
 

@@ -37,6 +37,7 @@ public class PlayerServiceImplTest {
     @Autowired
     PlayerServiceImpl playerService;
 
+    //Delete data from local database before each test
     @Before
     @Transactional
     public void setup() {
@@ -47,6 +48,7 @@ public class PlayerServiceImplTest {
 
     @Test
     public void getTenantPlayers() {
+        //Create tenant using builder and save it into local database and in a local variable
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -56,6 +58,7 @@ public class PlayerServiceImplTest {
                 .password("ciao")
                 .build());
 
+        //Create player using builder and save it into local database and in a local variable
         Player firstPlayer = playerRepository.save(Player.builder()
                 .name("Antonio")
                 .surname("DAddetta")
@@ -93,9 +96,12 @@ public class PlayerServiceImplTest {
                 .tenant(tenant)
                 .build());
 
+        //Call relative service test method
         playerService.getTenantPlayers(tenant.getId());
 
+        //Check if player entity is not null
         assertNotNull("Players not found", playerRepository.findPlayersByTenant_Id(tenant.getId()));
+        //Check if player entity records are 4
         assertEquals("Players are not 4", 4, playerRepository.findPlayersByTenant_Id(tenant.getId()).size());
     }
 
@@ -121,6 +127,7 @@ public class PlayerServiceImplTest {
                 .tenant(tenant)
                 .build();
 
+        //Create PlayerCreationRequestDTO variable to call service method createTenantPlayer()
         PlayerCreationRequestDTO playerCreationRequestDTO = new PlayerCreationRequestDTO();
         playerCreationRequestDTO.name = player.getName();
         playerCreationRequestDTO.surname = player.getSurname();
@@ -133,6 +140,7 @@ public class PlayerServiceImplTest {
 
         player = playerRepository.save(player);
 
+        //Check if data saved in database are equals to insert data
         assertEquals("Tenant is different", tenant, playerRepository.findById(player.getId()).get().getTenant());
         assertEquals("Name is different", player.getName(), playerRepository.findById(player.getId()).get().getName());
         assertEquals("Surname is different", player.getSurname(), playerRepository.findById(player.getId()).get().getSurname());
@@ -141,6 +149,7 @@ public class PlayerServiceImplTest {
         assertEquals("Email is different", player.getEmail(), playerRepository.findById(player.getId()).get().getEmail());
         assertEquals("Password is different", player.getPassword(), playerRepository.findById(player.getId()).get().getPassword());
 
+        //Check if local variable's data in database are not null
         assertNotNull("Id is null", player.getId());
         assertNotNull("Name is null", player.getName());
         assertNotNull("Surname is null", player.getSurname());
@@ -150,6 +159,7 @@ public class PlayerServiceImplTest {
         assertNotNull("Password is null", player.getPassword());
         assertNotNull("Tenant is null", player.getTenant());
 
+        //Check if local variable's data are equals to inserted ones
         assertEquals("Name is different", "Antonio", player.getName());
         assertEquals("Surname is different", "DAddetta", player.getSurname());
         assertEquals("Rating is different", Integer.valueOf(4), player.getRating());
@@ -183,6 +193,7 @@ public class PlayerServiceImplTest {
         playerService.getTenantPlayer(tenant.getId(), player.getId());
 
         assertNotNull("Player not found", playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), player.getId()));
+        //Check if two emails are the same
         assertEquals("Player is different", player.getEmail(), playerRepository.findPlayerByTenant_IdAndId(tenant.getId(), player.getId()).get().getEmail());
     }
 
@@ -217,6 +228,7 @@ public class PlayerServiceImplTest {
                 .tenant(tenant)
                 .build());
 
+        //Create game using builder and save it into local database and in a local variable
         Game firstGame = gameRepository.save(Game.builder()
                 .date("03/08/2021")
                 .time("20:50")
@@ -232,6 +244,7 @@ public class PlayerServiceImplTest {
         playerService.signToMatch(tenant.getId(), secondPlayer.getId(), firstGame.getId());
         playerService.signToMatch(tenant.getId(), secondPlayer.getId(), secondGame.getId());
 
+        //Add players to games
         firstGame.addPlayer(firstPlayer);
         firstGame.addPlayer(secondPlayer);
         secondGame.addPlayer(secondPlayer);
@@ -286,6 +299,7 @@ public class PlayerServiceImplTest {
 
         playerService.updateTenantPlayerRating(tenant.getId(), game.getId(), secondPlayer.getId(), playerCreationRequestDTO);
 
+        //Check if the player's rating value in the database is equal to average between 5(insert) and 1(other player's rating)
         assertEquals("Rating update failed", Integer.valueOf(3), secondPlayer.getRating());
     }
 

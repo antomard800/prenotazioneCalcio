@@ -45,6 +45,7 @@ public class GameServiceImplTest {
     @Autowired
     TeamRepository teamRepository;
 
+    //Delete data from local database before each test
     @Before
     public void setUp() {
         playerRepository.deleteAll();
@@ -56,6 +57,7 @@ public class GameServiceImplTest {
     @Test
     @Transactional
     public void getTenantGames() {
+        //Create tenant using builder and save it into local database and in a local variable
         Tenant tenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -65,6 +67,7 @@ public class GameServiceImplTest {
                 .password("ciao")
                 .build());
 
+        //Create game using builder and save it into local database and in a local variable
         Game firstGame = gameRepository.save(Game.builder()
                 .date("03/08/2021")
                 .time("20:50")
@@ -86,9 +89,12 @@ public class GameServiceImplTest {
                 .tenant(tenant)
                 .build());
 
+        //Call relative service test method
         gameService.getTenantMatches(tenant.getId());
 
+        //Check if game entity is not null
         assertNotNull("Games not found", gameRepository.findAll());
+        //Check if game entity records are 4
         assertEquals("Games are not 4", 4, gameRepository.findAll().size());
     }
 
@@ -110,21 +116,25 @@ public class GameServiceImplTest {
                 .tenant(tenant)
                 .build());
 
+        //Create GameCreationRequestDTO variable to call service method createTenantMatch()
         GameCreationRequestDTO gameCreationRequestDTO = new GameCreationRequestDTO();
         gameCreationRequestDTO.date = game.getDate();
         gameCreationRequestDTO.time = game.getTime();
 
         gameService.createTenantMatch(tenant.getId(), gameCreationRequestDTO);
 
+        //Check if data saved in database are equals to insert data
         assertEquals("Tenant is different", tenant, gameRepository.findById(game.getId()).get().getTenant());
         assertEquals("Date is different", game.getDate(), gameRepository.findById(game.getId()).get().getDate());
         assertEquals("Time is different", game.getTime(), gameRepository.findById(game.getId()).get().getTime());
 
+        //Check if local variable's data are not null
         assertNotNull("Id is null", game.getId());
         assertNotNull("Date is null", game.getDate());
         assertNotNull("Time is null", game.getTime());
         assertNotNull("Tenant is null", game.getTenant());
 
+        //Check if local variable's data are equals to inserted ones
         assertEquals("Date is different", "03/08/2021", game.getDate());
         assertEquals("Time is different", "20:50", game.getTime());
         assertEquals("Tenant is different", tenant, game.getTenant());
@@ -151,6 +161,7 @@ public class GameServiceImplTest {
         gameService.getTenantMatch(tenant.getId(), game.getId());
 
         assertNotNull("Game not found", gameRepository.findGameByTenant_IdAndId(tenant.getId(), game.getId()));
+        //Check if two ids are the same
         assertEquals("Game is different", game.getId(), gameRepository.findGameByTenant_IdAndId(tenant.getId(), game.getId()).get().getId());
     }
 
@@ -178,6 +189,7 @@ public class GameServiceImplTest {
 
         gameService.deleteTenantMatch(tenant.getId(), firstGame.getId());
 
+        //Check if the query return an empty value
         assertEquals("Game not deleted", Optional.empty(), gameRepository.findGameByTenant_IdAndId(tenant.getId(), firstGame.getId()));
         assertEquals("Game not well deleted", 1, gameRepository.findAll().size());
     }
@@ -194,6 +206,7 @@ public class GameServiceImplTest {
                 .password("ciao")
                 .build());
 
+        //Create player using builder and save it into local database and in a local variable
         Player firstPlayer = playerRepository.save(Player.builder()
                 .name("Antonio")
                 .surname("DAddetta")
@@ -228,6 +241,7 @@ public class GameServiceImplTest {
         playerService.signToMatch(tenant.getId(), secondPlayer.getId(), firstGame.getId());
         playerService.signToMatch(tenant.getId(), secondPlayer.getId(), secondGame.getId());
 
+        //Add players to games
         firstGame.addPlayer(firstPlayer);
         firstGame.addPlayer(secondPlayer);
         secondGame.addPlayer(secondPlayer);
@@ -293,6 +307,7 @@ public class GameServiceImplTest {
 
         gameService.removePlayer(tenant.getId(), firstGame.getId(), firstPlayer.getId());
 
+        //Remove player from game
         firstGame.getPlayers().remove(firstPlayer);
 
         assertEquals("Remove failed", 1, gameRepository.findById(firstGame.getId()).get().getPlayers().size());
@@ -324,6 +339,7 @@ public class GameServiceImplTest {
                 .tenant(tenant)
                 .build());
 
+        //Create team using builder and save it into local database and in a local variable
         Team firstTeam = teamRepository.save(Team.builder()
                 .name("Milan")
                 .color("Red")
@@ -359,11 +375,13 @@ public class GameServiceImplTest {
         firstGame.addPlayer(secondPlayer);
         secondGame.addPlayer(secondPlayer);
 
+        //Add players to team
         firstTeam.addPlayer(firstPlayer);
         firstTeam.addPlayer(secondPlayer);
 
         gameService.removePlayers(tenant.getId(), firstGame.getId());
 
+        //Remove players from team
         firstTeam.getPlayers().remove(firstPlayer);
         firstTeam.getPlayers().remove(secondPlayer);
 
@@ -570,6 +588,7 @@ public class GameServiceImplTest {
 
         gameService.buildTeams(tenant.getId(), game.getId());
 
+        //Check if there are the right number of players according to role
         assertEquals("There are more than 2 keepers", 2, game.getKeepers().size());
         assertEquals("There are more than 4 backs", 4, game.getBacks().size());
         assertEquals("There are more than 4 midfielders", 4, game.getMidfielders().size());

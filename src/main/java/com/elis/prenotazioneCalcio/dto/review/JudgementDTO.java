@@ -11,7 +11,7 @@ public class JudgementDTO {
     public String comment;
     public LocalDate date;
 
-    //Transform a Game into a GameDTO
+    //Transform a Judgement into a JudgementDTO
     public static JudgementDTO of(Judgement judgement) {
         JudgementDTO judgementDTO = new JudgementDTO();
 

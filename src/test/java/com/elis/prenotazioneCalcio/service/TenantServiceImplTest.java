@@ -23,6 +23,7 @@ public class TenantServiceImplTest {
     @Autowired
     TenantServiceImpl tenantService;
 
+    //Delete data from local database before each test
     @Before
     @Transactional
     public void setup() {
@@ -31,6 +32,7 @@ public class TenantServiceImplTest {
 
     @Test
     public void getTenants() {
+        //Create tenant using builder and save it into local database and in a local variable
         Tenant firstTenant = tenantRepository.save(Tenant.builder()
                 .name("Elis")
                 .city("Roma")
@@ -58,9 +60,12 @@ public class TenantServiceImplTest {
                 .password("milan")
                 .build());
 
+        //Call relative service test method
         tenantService.getTenants();
 
+        //Check if tenant entity is not null
         assertNotNull("Tenants not found", tenantRepository.findAll());
+        //Check if tenant entity records are 3
         assertEquals("Tenants are not 3", 3, tenantRepository.findAll().size());
     }
 
@@ -85,8 +90,10 @@ public class TenantServiceImplTest {
 
         tenantService.createTenant(tenantCreationRequestDTO);
 
+        //Save tenant into database
         tenant = tenantRepository.save(tenant);
 
+        //Check if data saved in database are not null
         assertNotNull("Id is null", tenant.getId());
         assertNotNull("Name is null", tenantRepository.findById(tenant.getId()).get().getName());
         assertNotNull("City is null", tenantRepository.findById(tenant.getId()).get().getCity());
@@ -95,6 +102,7 @@ public class TenantServiceImplTest {
         assertNotNull("Email is null", tenantRepository.findById(tenant.getId()).get().getEmail());
         assertNotNull("Password is null", tenantRepository.findById(tenant.getId()).get().getPassword());
 
+        //Check if data saved in database are equals to insert data
         assertEquals("Name is different", tenant.getName(), tenantRepository.findById(tenant.getId()).get().getName());
         assertEquals("City is different", tenant.getCity(), tenantRepository.findById(tenant.getId()).get().getCity());
         assertEquals("Address is different", tenant.getAddress(), tenantRepository.findById(tenant.getId()).get().getAddress());
@@ -117,6 +125,7 @@ public class TenantServiceImplTest {
         tenantService.getTenant(tenant.getId());
 
         assertNotNull("Tenant not found", tenantRepository.findById(tenant.getId()));
+        //Check if two emails are the same
         assertEquals("Tenant is different", tenant.getEmail(), tenantRepository.findById(tenant.getId()).get().getEmail());
     }
 }
